@@ -17,4 +17,11 @@ public class Masjid {
     @Column(name = "nama_masjid")
     private String namaMasjid;
 
+    public Masjid() {
+    }
+
+    public Masjid(Integer id, String namaMasjid) {
+        this.id = id;
+        this.namaMasjid = namaMasjid;
+    }
 }

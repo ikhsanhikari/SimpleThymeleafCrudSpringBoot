@@ -1,23 +1,87 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
 
-<form th:object="${masjid}" method="post" th:action="@{/save}">
-	<input type="text" th:field="*{id}"/><br>
-	<input type="text" th:field="*{namaMasjid}"/><br>
+<div th:replace="fragments/header.html"></div>
+<form id="frm" th:object="${masjid}" method="POST" th:action="@{/rest/masjid/save}">
+	<input type="text" th:field="*{id}" name="id"/><br>
+	<input type="text" th:field="*{namaMasjid}" name="namaMasjid"/><br>
 	<input type="submit" value="Save"/>
 </form>
 <br>
-<table border="1">
-	<tr >
-		<th>ID</th>
-		<th>NAMA</th>
-		<th>Update</th>
-		<th>Delete</th>
-	</tr>
-	<tr th:each="m : ${listMasjid}">
-		<td th:text="${m.id}"></td>
-		<td th:text="${m.namaMasjid}"></td>
-		<td><a th:href="@{getById/{id}(id=${m.id})}">Update</a></td>
-		<td ><a th:href="@{delete/{id}(id=${m.id})}">Delete</a></td>
-	</tr>
+<!--<table border="1">-->
+	<!--<tr >-->
+		<!--<th>ID</th>-->
+		<!--<th>NAMA</th>-->
+		<!--<th>Update</th>-->
+		<!--<th>Delete</th>-->
+	<!--</tr>-->
+	<!--<tr th:each="m : ${listMasjid}">-->
+		<!--<td th:text="${m.id}"></td>-->
+		<!--<td th:text="${m.namaMasjid}"></td>-->
+		<!--<td><a th:href="@{getById/{id}(id=${m.id})}">Update</a></td>-->
+		<!--<td ><a th:href="@{delete/{id}(id=${m.id})}">Delete</a></td>-->
+	<!--</tr>-->
+<!--</table>-->
+<!--<div id="tes"></div>-->
+<table id="tr" border="2">
+	<!--<tr id="te">-->
+		<!--<th>ID</th>-->
+		<!--<th>NAMA</th>-->
+	<!--</tr>-->
 </table>
+<div th:replace="fragments/footer.html"></div>
 
+
+<script>
+
+	
+	$(document).ready(function(){
+	
+		loadData();
+		
+		$('#frm').on('submit',function(e){
+			var masjid = {};
+			masjid.id = $("#id").val();
+			masjid.namaMasjid = $("#namaMasjid").val();
+			console.log(masjid);
+			e.preventDefault();
+			$.ajax({
+				type : 'POST',
+				dataType: 'json',
+				url : $('#frm').attr('action'),
+				data: JSON.stringify(masjid),
+				contentType:'application/json',
+				success : function(){
+					loadData();
+					resetForm();
+				}
+			})
+		})
+	})
+	function resetForm(){
+		$('[type=text]').val('');
+		$('[name=id]').focus();
+	}
+	function loadData(){
+		var urlDelete = "/rest/masjid/delete/";
+		$("#tr").html('');
+		$.get("/rest/masjid",function(data){
+			$.map(data,function(value,key){
+				$("#tr").append('<tr><td>'+value.id+'</td><td>'+value.namaMasjid+'</td><td > <a class="del" href='+urlDelete+''+value.id+'>Delete</a></td></tr>');
+			})
+			$(".del").click(function(e){
+					e.preventDefault();
+					$.ajax({
+						type: 'get',
+						url : $(this).attr('href'),
+						success: function(){
+							loadData();
+							resetForm();
+						}
+					})
+					
+				})
+		})
+	}
+	
+	
+</script>
