@@ -1,0 +1,6 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<form th:object="${masjid}" method="post" th:action="@{/update}">
+	<input type="text" th:field="*{id}"/><br>
+	<input type="text" th:field="*{namaMasjid}"/><br>
+	<input type="submit" value="Save"/>
+</form>

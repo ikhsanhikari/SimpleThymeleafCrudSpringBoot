@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+
+<form th:object="${masjid}" method="post" th:action="@{/save}">
+	<input type="text" th:field="*{id}"/><br>
+	<input type="text" th:field="*{namaMasjid}"/><br>
+	<input type="submit" value="Save"/>
+</form>
+<br>
+<table border="1">
+	<tr >
+		<th>ID</th>
+		<th>NAMA</th>
+		<th>Update</th>
+		<th>Delete</th>
+	</tr>
+	<tr th:each="m : ${listMasjid}">
+		<td th:text="${m.id}"></td>
+		<td th:text="${m.namaMasjid}"></td>
+		<td><a th:href="@{getById/{id}(id=${m.id})}">Update</a></td>
+		<td ><a th:href="@{delete/{id}(id=${m.id})}">Delete</a></td>
+	</tr>
+</table>
+
